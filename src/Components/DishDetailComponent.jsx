@@ -1,5 +1,6 @@
 import React from 'react';
-import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle} from 'reactstrap';
+import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem} from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 function DishDetail(props) {
 
@@ -19,26 +20,40 @@ function DishDetail(props) {
                 <h1>Comments</h1>
 
                 <ul className="list-unstyled">
-                    {props.dish.comments.map(makeList)}
+                    {props.comment.map(makeList)}
                 </ul>
             </div>
         );
     }
 
     return (
-        <div className="row">
-            <div  className="col-12 col-md-5 m-1">
-                <Card>
-                    <CardImg top src={props.dish.image} alt={props.dish.name} />
-                    <CardBody>
-                        <CardTitle>{props.dish.name}</CardTitle>
-                        <CardText>{props.dish.description}</CardText>
-                    </CardBody>
-                </Card>
+        <div className="container">
+
+            <Breadcrumb>
+                <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+                <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+            </Breadcrumb>
+
+            <div className="col-12">
+                <h3>{props.dish.name}</h3>
+                <hr />
             </div>
 
-            {generateComments()}
-            
+            <div className="row">
+                <div  className="col-12 col-md-5 m-1">
+                    <Card>
+                        <CardImg top src={props.dish.image} alt={props.dish.name} />
+                        <CardBody>
+                            <CardTitle>{props.dish.name}</CardTitle>
+                            <CardText>{props.dish.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </div>
+
+                {generateComments()}
+                
+            </div>
         </div>
     );
 }
