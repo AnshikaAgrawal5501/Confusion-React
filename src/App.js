@@ -5,6 +5,7 @@ import Contact from './Components/ContactComponent';
 import Footer from './Components/FooterComponent';
 import { BrowserRouter } from 'react-router-dom';
 import Home from './Components/HomeComponent';
+import About from './Components/AboutComponent';
 import DishDetail from './Components/DishDetailComponent';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import dishes from './Shared/dishes';
@@ -30,6 +31,10 @@ function App() {
         return <Home dish={dish} promotion={promotion} leader={leader} />;
     }
 
+    function AboutPage() {
+        return <About leaders={leaders} />;
+    }
+
     function MenuPage() {
         return <Menu dishes={dishes} comments={comments} />;
     }
@@ -53,6 +58,7 @@ function App() {
             
             <Switch>
                 <Route path='/home' component={HomePage} />
+                <Route exact path='/aboutus' component={AboutPage} />
                 <Route exact path='/menu' component={MenuPage} />
                 <Route path='/menu/:dishId' component={DishWithId} />
                 <Route exact path='/contactus' component={ContactPage} />
