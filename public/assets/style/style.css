@@ -32,3 +32,23 @@ address {
 .navbar-dark {
     background-color: #512DA8;
 }
+
+@media (max-width:768px) {
+    .media-list {
+        padding: 0;
+    }
+    .media {
+        display: flex;
+        flex-direction: column;
+    }
+    .media .media-body {
+        margin: 20px 0 !important;
+    }
+    .media .media-left {
+        width: 100%;
+        text-align: center;
+    }
+    .media .media-left img {
+        width: 50%;
+    }
+}

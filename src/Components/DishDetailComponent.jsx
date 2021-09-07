@@ -17,7 +17,7 @@ function DishDetail(props) {
 
     function submitComment(values) {
         toggleModal();
-        console.log('Current State is: ' + JSON.stringify(values));
+        props.addComment(props.dish.id, values.rating, values.author, values.comment);
         alert('Current State is: ' + JSON.stringify(values));
     }
 
@@ -40,7 +40,7 @@ function DishDetail(props) {
                     {props.comment.map(makeList)}
                 </ul>
 
-                <Button outline color="secondary" onClick={toggleModal}><span><i class="fas fa-pencil-alt"></i></span> Submit Comment</Button>
+                <Button outline color="secondary" onClick={toggleModal}><span><i className="fas fa-pencil-alt"></i></span> Submit Comment</Button>
             </div>
         );
     }
@@ -91,15 +91,15 @@ function DishDetail(props) {
                             </FormGroup>
 
                             <FormGroup>
-                                <Label htmlFor="yourname">Your Name</Label>
-                                <Control.text model=".yourname" id="yourname" name="yourname"
+                                <Label htmlFor="author">Your Name</Label>
+                                <Control.text model=".author" id="author" name="author"
                                     placeholder="Your Name"
                                     className="form-control"
                                     validators={{ required, minLength: minLength(3), maxLength: maxLength(15) }}
                                     />
                                 <Errors
                                     className="text-danger"
-                                    model=".yourname"
+                                    model=".author"
                                     show="touched"
                                     messages={{
                                         required: 'Required. ',
