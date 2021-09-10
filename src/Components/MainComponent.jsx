@@ -10,7 +10,7 @@ import DishDetail from './DishDetailComponent';
 // import promotions from './Shared/promotions';
 // import leaders from './Shared/leaders';
 import { connect } from 'react-redux';
-import { addComment } from '../redux/ActionCreater';
+import { addComment, fetchDishes } from '../redux/ActionCreater';
 
 const mapStateToProps = state => {
   return {
@@ -22,13 +22,18 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => dispatch(fetchDishes())
 });
 
 function Main(props) {
 
+  React.useEffect(function() {
+    props.fetchDishes();
+  },[]);
+
     function HomePage() {
-        const dish=props.dishes.filter((dish) => {
+        const dish=props.dishes.dishes.filter((dish) => {
           return dish.featured;
         })[0];
 
@@ -40,7 +45,12 @@ function Main(props) {
           return leader.featured;
         })[0];
 
-        return <Home dish={dish} promotion={promotion} leader={leader} />;
+        return <Home 
+            dish={dish} 
+            dishesLoading={props.dishes.isLoading}
+            dishesErrMess={props.dishes.errMess} 
+            promotion={promotion} leader={leader}             
+        />;
     }
 
     function AboutPage() {
@@ -58,7 +68,8 @@ function Main(props) {
     function DishWithId({match}) {
         return(
             <DishDetail 
-                dish={props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
+                dish={props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+                dishes={props.dishes} 
                 comment={props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
                 addComment={props.addComment} 
             />

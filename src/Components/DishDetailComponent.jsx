@@ -2,8 +2,11 @@ import React from 'react';
 import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, FormGroup, Col, Label, Modal, ModalHeader, ModalBody,} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import Loading from './LoadingComponent';
 
 function DishDetail(props) {
+
+    console.log(props)
 
     const [isModalOpen, modalFunc]=React.useState(false);
 
@@ -45,86 +48,106 @@ function DishDetail(props) {
         );
     }
 
-    return (
-        <div className="container">
-
-            <Breadcrumb>
-                <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
-                <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-            </Breadcrumb>
-
-            <div className="col-12">
-                <h3>{props.dish.name}</h3>
-                <hr />
+    if (props.dishes.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
             </div>
+        );
+    } else if (props.dishes.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+        
+    } else {
 
-            <div className="row">
-                <div  className="col-12 col-md-5 m-1">
-                    <Card>
-                        <CardImg top src={props.dish.image} alt={props.dish.name} />
-                        <CardBody>
-                            <CardTitle>{props.dish.name}</CardTitle>
-                            <CardText>{props.dish.description}</CardText>
-                        </CardBody>
-                    </Card>
+        return (
+            <div className="container">
+
+                <Breadcrumb>
+                    <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+                    <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                    <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                </Breadcrumb>
+
+                <div className="col-12">
+                    <h3>{props.dish.name}</h3>
+                    <hr />
                 </div>
 
-                {generateComments()}
+                <div className="row">
+                    <div  className="col-12 col-md-5 m-1">
+                        <Card>
+                            <CardImg top src={props.dish.image} alt={props.dish.name} />
+                            <CardBody>
+                                <CardTitle>{props.dish.name}</CardTitle>
+                                <CardText>{props.dish.description}</CardText>
+                            </CardBody>
+                        </Card>
+                    </div>
 
-                <Modal isOpen={isModalOpen} toggle={toggleModal}>
-                    <ModalHeader toggle={toggleModal}>Submit Comment</ModalHeader>
+                    {generateComments()}
 
-                    <ModalBody>
-                        <LocalForm onSubmit={(values) => submitComment(values)}>
+                    <Modal isOpen={isModalOpen} toggle={toggleModal}>
+                        <ModalHeader toggle={toggleModal}>Submit Comment</ModalHeader>
 
-                            <FormGroup>
-                                <Label htmlFor="rating">Rating</Label>
-                                <Control.select model=".rating" id="rating" name="rating"
-                                    className="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </Control.select>
-                            </FormGroup>
+                        <ModalBody>
+                            <LocalForm onSubmit={(values) => submitComment(values)}>
 
-                            <FormGroup>
-                                <Label htmlFor="author">Your Name</Label>
-                                <Control.text model=".author" id="author" name="author"
-                                    placeholder="Your Name"
-                                    className="form-control"
-                                    validators={{ required, minLength: minLength(3), maxLength: maxLength(15) }}
+                                <FormGroup>
+                                    <Label htmlFor="rating">Rating</Label>
+                                    <Control.select model=".rating" id="rating" name="rating"
+                                        className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Label htmlFor="author">Your Name</Label>
+                                    <Control.text model=".author" id="author" name="author"
+                                        placeholder="Your Name"
+                                        className="form-control"
+                                        validators={{ required, minLength: minLength(3), maxLength: maxLength(15) }}
+                                        />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".author"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required. ',
+                                            minLength: 'Must be greater than 2 characters. ',
+                                            maxLength: 'Must be 15 characters or less.'
+                                        }}
                                     />
-                                <Errors
-                                    className="text-danger"
-                                    model=".author"
-                                    show="touched"
-                                    messages={{
-                                        required: 'Required. ',
-                                        minLength: 'Must be greater than 2 characters. ',
-                                        maxLength: 'Must be 15 characters or less.'
-                                    }}
-                                />
-                            </FormGroup>
-                            
-                            <FormGroup>
-                                <Label htmlFor="comment" md={2}>Comment</Label>
-                                <Control.textarea model=".comment" id="comment" name="comment"
-                                    rows="6"
-                                    className="form-control" 
-                                />
-                            </FormGroup>
-                            <Button type="submit" value="submit" color="primary">Submit</Button>
-                        </LocalForm>
-                
-                    </ModalBody>
-                </Modal>
-                
+                                </FormGroup>
+                                
+                                <FormGroup>
+                                    <Label htmlFor="comment" md={2}>Comment</Label>
+                                    <Control.textarea model=".comment" id="comment" name="comment"
+                                        rows="6"
+                                        className="form-control" 
+                                    />
+                                </FormGroup>
+                                <Button type="submit" value="submit" color="primary">Submit</Button>
+                            </LocalForm>
+                    
+                        </ModalBody>
+                    </Modal>
+                    
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 
