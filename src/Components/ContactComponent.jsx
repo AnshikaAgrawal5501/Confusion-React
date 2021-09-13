@@ -35,8 +35,8 @@ function Contact(props) {
     // }
 
     function handleSubmit(values) {
-        console.log('Current State is: ' + JSON.stringify(values));
         alert('Current State is: ' + JSON.stringify(values));
+        props.postFeedback(values.firstname, values.lastname, values.tenum, values.email, values.agree, values.contactType, values.message);
         props.resetFeedbackForm();
         // event.preventDefault();
     }

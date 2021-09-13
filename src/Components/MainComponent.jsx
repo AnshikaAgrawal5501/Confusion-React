@@ -11,7 +11,7 @@ import DishDetail from './DishDetailComponent';
 // import leaders from './Shared/leaders';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreater';
+import { postComment, fetchDishes, fetchComments, fetchPromos, fetchLeaders, postFeedback } from '../redux/ActionCreater';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
@@ -28,7 +28,9 @@ const mapDispatchToProps = dispatch => ({
   fetchDishes: () => dispatch(fetchDishes()),
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
   fetchComments: () => dispatch(fetchComments()),
-  fetchPromos: () => dispatch(fetchPromos())
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
+  postFeedback: (firstname, lastname, tenum, email, agree, contactType, message) => dispatch(postFeedback(firstname, lastname, tenum, email, agree, contactType, message)),
 });
 
 function Main(props) {
@@ -38,6 +40,7 @@ function Main(props) {
     props.fetchDishes();
     props.fetchComments();
     props.fetchPromos();
+    props.fetchLeaders();
   },[]);
 
     function HomePage() {
@@ -49,7 +52,7 @@ function Main(props) {
           return promotion.featured;
         })[0];
 
-        const leader=props.leaders.filter((leader) => {
+        const leader=props.leaders.leaders.filter((leader) => {
           return leader.featured;
         })[0];
 
@@ -60,7 +63,9 @@ function Main(props) {
             promotion={promotion}
             promoLoading={props.promotions.isLoading}
             promoErrMess={props.promotions.errMess}
-            leader={leader}             
+            leader={leader}  
+            leaderLoading={props.leaders.isLoading}
+            leaderErrMess={props.leaders.errMess}           
         />;
     }
 
@@ -73,7 +78,10 @@ function Main(props) {
     }
 
     function ContactPage() {
-        return <Contact resetFeedbackForm={props.resetFeedbackForm} />;
+        return <Contact 
+            resetFeedbackForm={props.resetFeedbackForm} 
+            postFeedback={props.postFeedback}
+        />;
     }
 
     function DishWithId({match}) {
