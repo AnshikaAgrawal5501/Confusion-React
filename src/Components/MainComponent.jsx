@@ -12,6 +12,7 @@ import DishDetail from './DishDetailComponent';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreater';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
   return {
@@ -87,15 +88,19 @@ function Main(props) {
         );
     }
 
-    return (    
-        <Switch>
-            <Route path='/home' component={HomePage} />
-            <Route exact path='/aboutus' component={AboutPage} />
-            <Route exact path='/menu' component={MenuPage} />
-            <Route path='/menu/:dishId' component={DishWithId} />
-            <Route exact path='/contactus' component={ContactPage} />
-            <Redirect to="/home" />
-        </Switch>
+    return (   
+        <TransitionGroup>
+            <CSSTransition key={props.location.key} classNames="page" timeout={300}>
+                <Switch>
+                    <Route path='/home' component={HomePage} />
+                    <Route exact path='/aboutus' component={AboutPage} />
+                    <Route exact path='/menu' component={MenuPage} />
+                    <Route path='/menu/:dishId' component={DishWithId} />
+                    <Route exact path='/contactus' component={ContactPage} />
+                    <Redirect to="/home" />
+                </Switch>
+            </CSSTransition> 
+        </TransitionGroup>
     );
 }
 
