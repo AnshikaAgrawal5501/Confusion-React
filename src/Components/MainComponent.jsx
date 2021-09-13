@@ -10,7 +10,8 @@ import DishDetail from './DishDetailComponent';
 // import promotions from './Shared/promotions';
 // import leaders from './Shared/leaders';
 import { connect } from 'react-redux';
-import { addComment, fetchDishes } from '../redux/ActionCreater';
+import { actions } from 'react-redux-form';
+import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreater';
 
 const mapStateToProps = state => {
   return {
@@ -22,14 +23,20 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-  fetchDishes: () => dispatch(fetchDishes())
+  postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
+  fetchDishes: () => dispatch(fetchDishes()),
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos())
 });
 
 function Main(props) {
 
   React.useEffect(function() {
+
     props.fetchDishes();
+    props.fetchComments();
+    props.fetchPromos();
   },[]);
 
     function HomePage() {
@@ -37,7 +44,7 @@ function Main(props) {
           return dish.featured;
         })[0];
 
-        const promotion=props.promotions.filter((promotion) => {
+        const promotion=props.promotions.promotions.filter((promotion) => {
           return promotion.featured;
         })[0];
 
@@ -49,7 +56,10 @@ function Main(props) {
             dish={dish} 
             dishesLoading={props.dishes.isLoading}
             dishesErrMess={props.dishes.errMess} 
-            promotion={promotion} leader={leader}             
+            promotion={promotion}
+            promoLoading={props.promotions.isLoading}
+            promoErrMess={props.promotions.errMess}
+            leader={leader}             
         />;
     }
 
@@ -62,7 +72,7 @@ function Main(props) {
     }
 
     function ContactPage() {
-        return <Contact />;
+        return <Contact resetFeedbackForm={props.resetFeedbackForm} />;
     }
 
     function DishWithId({match}) {
@@ -70,8 +80,9 @@ function Main(props) {
             <DishDetail 
                 dish={props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
                 dishes={props.dishes} 
-                comment={props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
-                addComment={props.addComment} 
+                comment={props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+                postComment={props.postComment} 
+                commentsErrMess={props.comments.errMess}
             />
         );
     }

@@ -3,6 +3,7 @@ import {Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import Loading from './LoadingComponent';
+import { baseUrl } from '../Shared/baseUrl';
 
 function DishDetail(props) {
 
@@ -20,7 +21,7 @@ function DishDetail(props) {
 
     function submitComment(values) {
         toggleModal();
-        props.addComment(props.dish.id, values.rating, values.author, values.comment);
+        props.postComment(props.dish.id, values.rating, values.author, values.comment);
         alert('Current State is: ' + JSON.stringify(values));
     }
 
@@ -84,7 +85,7 @@ function DishDetail(props) {
                 <div className="row">
                     <div  className="col-12 col-md-5 m-1">
                         <Card>
-                            <CardImg top src={props.dish.image} alt={props.dish.name} />
+                            <CardImg top src={baseUrl + props.dish.image} alt={props.dish.name} />
                             <CardBody>
                                 <CardTitle>{props.dish.name}</CardTitle>
                                 <CardText>{props.dish.description}</CardText>
